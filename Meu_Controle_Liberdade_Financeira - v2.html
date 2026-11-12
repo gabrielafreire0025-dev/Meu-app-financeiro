@@ -1,44 +1,684 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#5b3cc4">
-<title>Meu Controle Financeiro</title>
-<style>
-:root{color-scheme:light;--bg:#f4f5fb;--card:#fff;--text:#24213b;--muted:#6d6982;--primary:#6548d3;--line:#e7e5ef;--green:#16834b;--red:#c5394b;--shadow:0 10px 30px #27204b12}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px system-ui,-apple-system,Segoe UI,sans-serif}header{background:linear-gradient(120deg,#375fca,#7c3fd0);color:#fff;padding:22px max(18px,calc((100% - 1100px)/2));}header h1{font-size:24px;margin:0}header p{margin:6px 0 0;opacity:.9}.wrap{max-width:1100px;margin:20px auto;padding:0 16px}.tabs{display:flex;gap:8px;overflow:auto;padding:2px 0 12px}.tabs button,.button{border:0;border-radius:12px;padding:10px 15px;background:#fff;color:var(--text);font:inherit;font-weight:650;cursor:pointer;white-space:nowrap;box-shadow:0 2px 8px #2221}.tabs button.active,.button.primary{background:var(--primary);color:white}.button.danger{color:var(--red)}button:hover{filter:brightness(.97)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:14px 0}.card{background:var(--card);border-radius:18px;padding:18px;box-shadow:var(--shadow)}.card h2,.card h3{margin:0 0 12px}.metric{font-size:25px;font-weight:750;margin-top:8px}.muted{color:var(--muted);font-size:13px}.good{color:var(--green)}.bad{color:var(--red)}form{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;align-items:end}label{display:block;color:var(--muted);font-size:13px}input,select{display:block;width:100%;margin-top:5px;border:1px solid var(--line);border-radius:10px;background:white;color:var(--text);padding:10px;font:inherit}input:focus,select:focus{outline:2px solid #6548d344;border-color:var(--primary)}.actions{display:flex;align-items:end;gap:8px;flex-wrap:wrap}.tablewrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:600px}th,td{text-align:left;padding:11px 8px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-size:12px}td:last-child{text-align:right}.empty{padding:24px;text-align:center;color:var(--muted)}.status{position:fixed;bottom:12px;left:12px;padding:8px 12px;border-radius:20px;background:#fff;box-shadow:var(--shadow);font-size:12px;color:var(--green)}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.toolbar input[type=file]{max-width:240px}.hint{background:#f0edff;padding:12px;border-radius:12px;color:#43377b;font-size:13px;line-height:1.5}.hidden{display:none!important}.progress{height:9px;background:var(--line);border-radius:20px;overflow:hidden}.progress i{display:block;height:100%;background:var(--primary)}@media(max-width:600px){header{padding:18px}.wrap{margin:12px auto}.metric{font-size:22px}.card{padding:15px}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Meu Controle — Minha Liberdade Financeira</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FFF9FC;
+      --sf: #fff;
+      --tx: #581C87;
+      --mu: #8a6b9e;
+      --bd: #f3e3ee;
+      --pr: #DB2777;
+      --pk: #EC4899;
+      --sh: 0 8px 28px #db277716;
+      --ok: #16a34a;
+      --bad: #dc2626;
+      --wn: #d97706;
+      --dark-bg: #1a0f24;
+      --dark-sf: #261634;
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme=light]) {
+        --bg: #1a0f24;
+        --sf: #261634;
+        --tx: #fbeaff;
+        --mu: #c9a8de;
+        --bd: #3d2552;
+        --pr: #F472B6;
+        --pk: #F472B6;
+        --ok: #4ade80;
+        --bad: #f87171;
+        --wn: #fbbf24;
+      }
+    }
+
+    :root[data-theme=dark] {
+      --bg: #1a0f24;
+      --sf: #261634;
+      --tx: #fbeaff;
+      --mu: #c9a8de;
+      --bd: #3d2552;
+      --pr: #F472B6;
+      --pk: #F472B6;
+      --ok: #4ade80;
+      --bad: #f87171;
+      --wn: #fbbf24;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--tx);
+      font: 14px 'Plus Jakarta Sans', Inter, system-ui, sans-serif;
+      display: flex;
+      min-height: 100vh;
+    }
+    nav {
+      width: 210px;
+      background: linear-gradient(180deg, #581C87, #86268f);
+      color: #fff;
+      padding: 16px 10px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+      flex: none;
+    }
+    nav h1 {
+      font-size: 15px;
+      margin: 0 6px 14px;
+    }
+    nav h1 small {
+      display: block;
+      font-weight: 400;
+      opacity: .7;
+      font-size: 11px;
+    }
+    nav a {
+      display: block;
+      color: #f5d9ff;
+      padding: 10px 12px;
+      border-radius: 12px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    nav a.on {
+      background: var(--pr);
+      color: #fff;
+    }
+    main {
+      flex: 1;
+      padding: 20px;
+      min-width: 0;
+      max-width: 1100px;
+    }
+    h2 { margin: 0 0 14px; }
+    h3 { margin: 0 0 8px; font-size: 14px; }
+    .g {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .g2 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+    .c {
+      background: var(--sf);
+      border: 1px solid var(--bd);
+      border-radius: 22px;
+      padding: 18px;
+      margin-bottom: 12px;
+      box-shadow: var(--sh);
+    }
+    .g .c { margin: 0; }
+    .k b {
+      display: block;
+      font-size: 20px;
+      margin: 4px 0;
+    }
+    .mu { color: var(--mu); font-size: 12px; }
+    .ok { color: var(--ok); }
+    .bad { color: var(--bad); }
+    .wn { color: var(--wn); }
+    .t {
+      font-size: 10px;
+      border: 1px solid var(--bd);
+      border-radius: 99px;
+      padding: 1px 7px;
+      color: var(--mu);
+      margin-left: 4px;
+      white-space: nowrap;
+    }
+    .bar {
+      height: 7px;
+      background: var(--bd);
+      border-radius: 9px;
+      overflow: hidden;
+      margin: 8px 0;
+    }
+    .bar i {
+      display: block;
+      height: 100%;
+      background: var(--pr);
+      border-radius: 9px;
+    }
+    .b {
+      border: 1px solid var(--bd);
+      background: var(--sf);
+      color: var(--tx);
+      border-radius: 8px;
+      padding: 6px 11px;
+      cursor: pointer;
+      font: inherit;
+      margin: 3px 3px 0 0;
+    }
+    .b.p {
+      background: var(--pr);
+      border-color: var(--pr);
+      color: #fff;
+    }
+    .hb {
+      display: grid;
+      grid-template-columns: 110px 1fr 90px;
+      gap: 8px;
+      align-items: center;
+      margin: 5px 0;
+      font-size: 12px;
+    }
+    .hb i {
+      display: block;
+      height: 9px;
+      background: var(--pr);
+      border-radius: 9px;
+    }
+    .hb b { text-align: right; }
+    label {
+      display: block;
+      margin: 8px 0;
+      font-size: 12px;
+      color: var(--mu);
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid var(--bd);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--tx);
+      font: inherit;
+      margin-top: 3px;
+    }
+    .mb {
+      position: fixed;
+      inset: 0;
+      background: #0008;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9;
+      padding: 12px;
+    }
+    .m {
+      background: var(--sf);
+      border-radius: 14px;
+      padding: 18px;
+      width: 100%;
+      max-width: 420px;
+      max-height: 90vh;
+      overflow: auto;
+    }
+    .r { text-align: right; margin-top: 10px; }
+    #fab {
+      position: fixed;
+      right: 18px;
+      bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+      z-index: 5;
+      border-radius: 99px;
+      padding: 12px 18px;
+      font-weight: 600;
+      box-shadow: 0 6px 18px #0004;
+    }
+    .cal {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+    .cal div {
+      min-height: 54px;
+      border: 1px solid var(--bd);
+      border-radius: 8px;
+      padding: 4px;
+      font-size: 11px;
+      cursor: pointer;
+      background: var(--sf);
+    }
+    .cal .s { outline: 2px solid var(--pr); }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--bd);
+      flex-wrap: wrap;
+    }
+    .ov { overflow-x: auto; }
+    textarea {
+      width: 100%;
+      height: 110px;
+      background: var(--bg);
+      color: var(--tx);
+      border: 1px solid var(--bd);
+      border-radius: 8px;
+    }
+    @keyframes up {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: none; }
+    }
+    @keyframes gr {
+      from { width: 0; }
+    }
+    .c { animation: up .45s both; transition: transform .2s; }
+    .c:hover { transform: translateY(-2px); }
+    .bar i { animation: gr .9s both; }
+    .b.p {
+      background: linear-gradient(135deg, var(--pk), var(--pr));
+    }
+    .b:hover {
+      filter: brightness(.97);
+      transform: translateY(-1px);
+    }
+    .hero {
+      background: linear-gradient(135deg, #F472B6, #EC4899 45%, #a78bfa);
+      color: #fff;
+      border-radius: 28px;
+      padding: 22px;
+      margin-bottom: 14px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--sh);
+      animation: up .5s both;
+    }
+    .hero h2 {
+      font-size: 22px;
+      margin: 0 0 4px;
+    }
+    .hero .mu { color: #ffffffd9; }
+    .hero b {
+      font-size: 22px;
+      display: block;
+      margin-top: 2px;
+    }
+    .hero svg {
+      position: absolute;
+      right: 8px;
+      bottom: -6px;
+      width: 150px;
+      pointer-events: none;
+    }
+    .hs {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      max-width: 80%;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    td { padding: 3px; }
+    td input, td select { margin: 0; min-width: 92px; }
+    .bar { background: #f9d5ea; }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+    }
+    @media (max-width: 760px) {
+      body { display: block; }
+      nav {
+        width: 100%;
+        height: auto;
+        position: static;
+        display: flex;
+        overflow: auto;
+        gap: 8px;
+        padding: 12px 10px;
+      }
+      nav h1 { display: none; }
+      nav a { white-space: nowrap; }
+      main { padding: 14px; }
+      .hs { max-width: 100%; }
+      .hero { padding: 18px; }
+    }
+  </style>
 </head>
 <body>
-<header><h1>Meu Controle Financeiro</h1><p>Organize suas contas, acompanhe gastos e cuide dos seus objetivos.</p></header>
-<div class="wrap">
-<nav class="tabs" aria-label="Seções do app"><button data-tab="inicio" class="active">Visão geral</button><button data-tab="lancamentos">Lançamentos</button><button data-tab="contas">Contas e dívidas</button><button data-tab="objetivos">Objetivos</button><button data-tab="backup">Dados e backup</button></nav>
-<main id="app" aria-live="polite"></main>
-</div><div class="status" id="status">Salvo neste aparelho</div>
-<script>
-'use strict';
-const STORAGE_KEY='meu-controle-financeiro-v1';
-const today=()=>new Date().toISOString().slice(0,10);
-const blank=()=>({transactions:[],accounts:[],goals:[]});
-function load(){try{const value=JSON.parse(localStorage.getItem(STORAGE_KEY));if(value&&Array.isArray(value.transactions)&&Array.isArray(value.accounts)&&Array.isArray(value.goals))return value}catch(e){}return blank()}
-let data=load(),tab='inicio';
-const $=(s,root=document)=>root.querySelector(s);
-const money=c=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format((Number(c)||0)/100);
-const cents=s=>{const n=Number(String(s).trim().replace(/\./g,'').replace(',','.'));return Number.isFinite(n)&&n>=0?Math.round(n*100):null};
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(data));$('#status').textContent='Salvo neste aparelho · '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});$('#status').className='status'}catch(e){$('#status').textContent='Não foi possível salvar neste navegador';$('#status').className='status bad'}}
-function total(items,filter=()=>true){return items.filter(filter).reduce((n,x)=>n+(Number(x.amount)||0),0)}
-function render(){document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));const root=$('#app');root.innerHTML=tab==='inicio'?home():tab==='lancamentos'?transactions():tab==='contas'?accounts():tab==='objetivos'?goals():backup();bind()}
-function home(){const month=today().slice(0,7),ts=data.transactions.filter(x=>x.date?.slice(0,7)===month),income=total(ts,x=>x.type==='income'),expense=total(ts,x=>x.type==='expense'),remaining=income-expense,debt=total(data.accounts,x=>x.kind==='debt');return `<section class="grid"><div class="card"><div class="muted">Entradas neste mês</div><div class="metric good">${money(income)}</div></div><div class="card"><div class="muted">Saídas neste mês</div><div class="metric bad">${money(expense)}</div></div><div class="card"><div class="muted">Saldo do mês (com lançamentos)</div><div class="metric ${remaining<0?'bad':'good'}">${money(remaining)}</div></div><div class="card"><div class="muted">Dívidas cadastradas</div><div class="metric">${money(debt)}</div></div></section><section class="card"><h2>Últimos lançamentos</h2>${transactionTable(data.transactions.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8))}</section><p class="hint">Os dados são salvos automaticamente no armazenamento local deste navegador. Eles não são enviados para um servidor e não acompanham você para outros aparelhos. Faça backups periódicos em “Dados e backup”.</p>`}
-function transactions(){return `<section class="card"><h2>Novo lançamento</h2><form id="tx-form"><label>Tipo<select name="type"><option value="expense">Despesa</option><option value="income">Receita</option></select></label><label>Descrição<input name="name" required maxlength="100" placeholder="Ex.: mercado"></label><label>Categoria<input name="category" maxlength="50" placeholder="Ex.: Alimentação"></label><label>Valor (R$)<input name="amount" required inputmode="decimal" placeholder="0,00"></label><label>Data<input name="date" type="date" value="${today()}" required></label><div class="actions"><button class="button primary">Adicionar lançamento</button></div></form></section><section class="card"><h2>Histórico</h2>${transactionTable(data.transactions.slice().sort((a,b)=>b.date.localeCompare(a.date)))}</section>`}
-function transactionTable(items){if(!items.length)return '<div class="empty">Ainda não há lançamentos.</div>';return `<div class="tablewrap"><table><thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Tipo</th><th>Valor</th><th></th></tr></thead><tbody>${items.map(x=>`<tr><td>${esc(x.date)}</td><td>${esc(x.name)}</td><td>${esc(x.category||'—')}</td><td>${x.type==='income'?'Receita':'Despesa'}</td><td class="${x.type==='income'?'good':'bad'}">${x.type==='income'?'+':'−'}${money(x.amount)}</td><td><button class="button danger" data-delete-tx="${esc(x.id)}" aria-label="Excluir ${esc(x.name)}">Excluir</button></td></tr>`).join('')}</tbody></table></div>`}
-function accounts(){return `<section class="card"><h2>Cadastrar conta ou dívida</h2><form id="account-form"><label>Tipo<select name="kind"><option value="debt">Dívida / parcela</option><option value="account">Conta / cartão</option></select></label><label>Nome<input name="name" required maxlength="100" placeholder="Ex.: cartão ou empréstimo"></label><label>Valor atual (R$)<input name="amount" required inputmode="decimal" placeholder="0,00"></label><label>Vencimento (opcional)<input name="due" type="date"></label><div class="actions"><button class="button primary">Adicionar</button></div></form></section><section class="card"><h2>Contas cadastradas</h2>${data.accounts.length?`<div class="tablewrap"><table><thead><tr><th>Tipo</th><th>Nome</th><th>Valor</th><th>Vencimento</th><th></th></tr></thead><tbody>${data.accounts.map(x=>`<tr><td>${x.kind==='debt'?'Dívida':'Conta / cartão'}</td><td>${esc(x.name)}</td><td>${money(x.amount)}</td><td>${esc(x.due||'—')}</td><td><button class="button danger" data-delete-account="${esc(x.id)}">Excluir</button></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">Nenhuma conta ou dívida cadastrada.</div>'}</section>`}
-function goals(){return `<section class="card"><h2>Novo objetivo</h2><form id="goal-form"><label>Nome do objetivo<input name="name" required maxlength="100" placeholder="Ex.: reserva de emergência"></label><label>Meta (R$)<input name="target" required inputmode="decimal" placeholder="0,00"></label><label>Já guardado (R$)<input name="saved" inputmode="decimal" placeholder="0,00" value="0,00"></label><div class="actions"><button class="button primary">Salvar objetivo</button></div></form></section><section class="grid">${data.goals.length?data.goals.map(x=>{const pct=x.target?Math.min(100,Math.round(x.saved/x.target*100)):0;return `<article class="card"><h3>${esc(x.name)}</h3><p>${money(x.saved)} guardados de ${money(x.target)}</p><div class="progress"><i style="width:${pct}%"></i></div><p class="muted">${pct}% da meta</p><div class="actions"><button class="button" data-add-goal="${esc(x.id)}">Adicionar valor</button><button class="button danger" data-delete-goal="${esc(x.id)}">Excluir</button></div></article>`}).join(''):'<div class="card empty">Ainda não há objetivos cadastrados.</div>'}</section>`}
-function backup(){return `<section class="card"><h2>Dados e backup</h2><p>O app grava automaticamente seus dados no armazenamento local deste navegador. Eles não são enviados para a internet. Para usá-los em outro aparelho, exporte o backup e importe-o nele.</p><div class="toolbar"><button class="button primary" id="export">Baixar backup JSON</button><label class="button">Importar backup JSON<input id="import" type="file" accept="application/json,.json" hidden></label><button class="button danger" id="clear">Apagar todos os dados deste aparelho</button></div><p class="muted">Apagar os dados do navegador ou usar uma janela anônima também pode remover ou isolar os dados salvos. Guarde um backup em local seguro.</p></section>`}
-function bind(){const tx=$('#tx-form');if(tx)tx.onsubmit=e=>{e.preventDefault();const f=new FormData(tx),amount=cents(f.get('amount'));if(amount===null)return alert('Confira o valor informado.');data.transactions.push({id:crypto.randomUUID?.()||String(Date.now()),type:f.get('type'),name:String(f.get('name')).trim(),category:String(f.get('category')).trim(),amount,date:f.get('date')});persist();render()};const ac=$('#account-form');if(ac)ac.onsubmit=e=>{e.preventDefault();const f=new FormData(ac),amount=cents(f.get('amount'));if(amount===null)return alert('Confira o valor informado.');data.accounts.push({id:crypto.randomUUID?.()||String(Date.now()),kind:f.get('kind'),name:String(f.get('name')).trim(),amount,due:f.get('due')});persist();render()};const gf=$('#goal-form');if(gf)gf.onsubmit=e=>{e.preventDefault();const f=new FormData(gf),target=cents(f.get('target')),saved=cents(f.get('saved')||'0');if(target===null||saved===null)return alert('Confira os valores informados.');data.goals.push({id:crypto.randomUUID?.()||String(Date.now()),name:String(f.get('name')).trim(),target,saved});persist();render()};document.querySelectorAll('[data-delete-tx]').forEach(b=>b.onclick=()=>{data.transactions=data.transactions.filter(x=>x.id!==b.dataset.deleteTx);persist();render()});document.querySelectorAll('[data-delete-account]').forEach(b=>b.onclick=()=>{data.accounts=data.accounts.filter(x=>x.id!==b.dataset.deleteAccount);persist();render()});document.querySelectorAll('[data-delete-goal]').forEach(b=>b.onclick=()=>{data.goals=data.goals.filter(x=>x.id!==b.dataset.deleteGoal);persist();render()});document.querySelectorAll('[data-add-goal]').forEach(b=>b.onclick=()=>{const value=prompt('Quanto deseja adicionar? (R$)');if(value===null)return;const amount=cents(value);if(amount===null)return alert('Confira o valor.');const goal=data.goals.find(x=>x.id===b.dataset.addGoal);if(goal){goal.saved+=amount;persist();render()}});const ex=$('#export');if(ex)ex.onclick=()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='meu-controle-backup-'+today()+'.json';a.click();URL.revokeObjectURL(a.href)};const im=$('#import');if(im)im.onchange=async()=>{try{const x=JSON.parse(await im.files[0].text());if(!x||!Array.isArray(x.transactions)||!Array.isArray(x.accounts)||!Array.isArray(x.goals))throw Error();if(!confirm('Importar este backup substituirá os dados salvos neste navegador. Continuar?'))return;data=x;persist();render()}catch(e){alert('Arquivo inválido ou incompatível. Seus dados atuais não foram alterados.')}};const clear=$('#clear');if(clear)clear.onclick=()=>{if(confirm('Tem certeza? Isso apagará permanentemente os dados salvos neste navegador.')){data=blank();persist();render()}}}
-document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{tab=b.dataset.tab;render()}));
-window.addEventListener('storage',e=>{if(e.key===STORAGE_KEY){data=load();render()}});
-render();persist();
-</script>
+  <nav>
+    <h1>Meu Controle<small>Minha Liberdade Financeira</small></h1>
+    <a href="#" class="on">Dashboard</a>
+    <a href="#">Lançamentos</a>
+    <a href="#">Orçamento</a>
+    <a href="#">Cartões</a>
+    <a href="#">Objetivos</a>
+    <a href="#">Dados</a>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <h2>Meu controle</h2>
+      <div class="mu">Resumo da semana</div>
+      <b id="hero-total">R$ 0,00</b>
+      <div class="hs">
+        <div>
+          <div class="mu">Receitas</div>
+          <strong id="hero-incomes">R$ 0,00</strong>
+        </div>
+        <div>
+          <div class="mu">Despesas</div>
+          <strong id="hero-expenses">R$ 0,00</strong>
+        </div>
+        <div>
+          <div class="mu">Saldo</div>
+          <strong id="hero-balance">R$ 0,00</strong>
+        </div>
+      </div>
+      <svg viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="55" cy="62" r="26" fill="rgba(255,255,255,0.12)"></circle>
+        <circle cx="78" cy="68" r="18" fill="rgba(255,255,255,0.12)"></circle>
+        <circle cx="44" cy="42" r="12" fill="rgba(255,255,255,0.12)"></circle>
+      </svg>
+    </section>
+
+    <div class="g">
+      <div class="c k">
+        <div class="mu">Receitas</div>
+        <b id="card-income">R$ 0,00</b>
+      </div>
+      <div class="c k">
+        <div class="mu">Despesas</div>
+        <b id="card-expense">R$ 0,00</b>
+      </div>
+      <div class="c k">
+        <div class="mu">Saldo</div>
+        <b id="card-balance">R$ 0,00</b>
+      </div>
+      <div class="c k">
+        <div class="mu">Meta</div>
+        <b id="card-goal">R$ 0,00</b>
+      </div>
+    </div>
+
+    <div class="g g2">
+      <section class="c">
+        <h2>Últimos lançamentos</h2>
+        <div id="transactions-list"></div>
+      </section>
+
+      <section class="c">
+        <h2>Orçamento</h2>
+        <div class="hb">
+          <span>Vestuário</span>
+          <div class="bar"><i style="width: 45%"></i></div>
+          <b>R$ 220</b>
+        </div>
+        <div class="hb">
+          <span>Alimentação</span>
+          <div class="bar"><i style="width: 67%"></i></div>
+          <b>R$ 420</b>
+        </div>
+        <div class="hb">
+          <span>Casa</span>
+          <div class="bar"><i style="width: 81%"></i></div>
+          <b>R$ 610</b>
+        </div>
+        <div class="hb">
+          <span>Transporte</span>
+          <div class="bar"><i style="width: 54%"></i></div>
+          <b>R$ 280</b>
+        </div>
+
+        <h3 style="margin-top:18px;">Adicionar novo lançamento</h3>
+        <form id="transaction-form">
+          <label>
+            Tipo
+            <select id="type" name="type">
+              <option value="income">Receita</option>
+              <option value="expense">Despesa</option>
+            </select>
+          </label>
+          <label>
+            Descrição
+            <input id="description" name="description" type="text" placeholder="Ex.: mercado" required>
+          </label>
+          <label>
+            Categoria
+            <input id="category" name="category" type="text" placeholder="Ex.: alimentação">
+          </label>
+          <label>
+            Valor (R$)
+            <input id="amount" name="amount" type="number" step="0.01" min="0" placeholder="0,00" required>
+          </label>
+          <label>
+            Data
+            <input id="date" name="date" type="date" required>
+          </label>
+          <div class="r">
+            <button type="submit" class="b p">Salvar lançamento</button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <section class="c">
+      <h2>Dados e backup</h2>
+      <p class="mu">Este site salva os dados no navegador. Para usar em outros aparelhos, faça o backup e importe em outro dispositivo.</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:12px;">
+        <button class="b p" id="download-backup">Exportar backup</button>
+        <label class="b" for="import-backup" style="display:inline-flex; align-items:center; cursor:pointer;">Importar backup
+          <input id="import-backup" type="file" accept="application/json" hidden>
+        </label>
+        <button class="b" id="copy-backup">Copiar dados</button>
+      </div>
+      <div id="backup-status" class="mu" style="margin-top:12px; min-height:18px;"></div>
+    </section>
+  </main>
+
+  <script>
+    const STORAGE_KEY = 'meu-controle-financeiro-v1';
+
+    const state = {
+      transactions: []
+    };
+
+    function money(value) {
+      return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+      }).format(Number(value || 0));
+    }
+
+    function parseDate(value) {
+      const d = new Date(value + 'T12:00:00');
+      return Number.isNaN(d.getTime()) ? new Date() : d;
+    }
+
+    function sortTransactions(items) {
+      return [...items].sort((a, b) => {
+        const da = parseDate(a.date).getTime();
+        const db = parseDate(b.date).getTime();
+        return db - da;
+      });
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      updateStatus('Dados salvos neste aparelho');
+    }
+
+    function loadState() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        state.transactions = [
+          { id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()), type: 'income', description: 'Salário', category: 'Receita', amount: 4200, date: '2026-11-01' },
+          { id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()), type: 'expense', description: 'Mercado', category: 'Alimentação', amount: 420, date: '2026-11-03' },
+          { id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()), type: 'expense', description: 'Internet', category: 'Casa', amount: 120, date: '2026-11-05' },
+          { id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()), type: 'expense', description: 'Combustível', category: 'Transporte', amount: 180, date: '2026-11-09' }
+        ];
+        return;
+      }
+      try {
+        const saved = JSON.parse(raw);
+        state.transactions = Array.isArray(saved.transactions) ? saved.transactions : [];
+      } catch (error) {
+        state.transactions = [];
+      }
+    }
+
+    function calculateTotals() {
+      const income = state.transactions
+        .filter(item => item.type === 'income')
+        .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+
+      const expense = state.transactions
+        .filter(item => item.type === 'expense')
+        .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+
+      const total = income - expense;
+      const goal = 5000;
+
+      return { income, expense, total, goal };
+    }
+
+    function renderTransactions() {
+      const list = document.getElementById('transactions-list');
+      const transactions = sortTransactions(state.transactions).slice(0, 6);
+
+      if (!transactions.length) {
+        list.innerHTML = '<div class="mu">Nenhum lançamento cadastrado.</div>';
+        return;
+      }
+
+      list.innerHTML = transactions.map(item => {
+        const isIncome = item.type === 'income';
+        const sign = isIncome ? '+' : '-';
+        return `
+          <div class="row">
+            <div>
+              <strong>${item.description}</strong>
+              <div class="mu">${item.category || 'Sem categoria'} · ${new Date(item.date + 'T12:00:00').toLocaleDateString('pt-BR')}</div>
+            </div>
+            <div class="${isIncome ? 'ok' : 'bad'}" style="font-weight:700;">${sign}${money(item.amount)}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderSummary() {
+      const { income, expense, total, goal } = calculateTotals();
+
+      const heroTotal = document.getElementById('hero-total');
+      const heroIncomes = document.getElementById('hero-incomes');
+      const heroExpenses = document.getElementById('hero-expenses');
+      const heroBalance = document.getElementById('hero-balance');
+      const cardIncome = document.getElementById('card-income');
+      const cardExpense = document.getElementById('card-expense');
+      const cardBalance = document.getElementById('card-balance');
+      const cardGoal = document.getElementById('card-goal');
+
+      heroTotal.textContent = money(total);
+      heroIncomes.textContent = money(income);
+      heroExpenses.textContent = money(expense);
+      heroBalance.textContent = money(total);
+      cardIncome.textContent = money(income);
+      cardExpense.textContent = money(expense);
+      cardBalance.textContent = money(total);
+      cardGoal.textContent = money(goal);
+    }
+
+    function updateStatus(message) {
+      const el = document.getElementById('backup-status');
+      if (el) {
+        el.textContent = message;
+      }
+    }
+
+    function generateBackup() {
+      const payload = JSON.stringify(state, null, 2);
+      const blob = new Blob([payload], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'meu-controle-financeiro-backup.json';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      updateStatus('Backup exportado com sucesso');
+    }
+
+    function importBackup(file) {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        try {
+          const parsed = JSON.parse(String(event.target.result || '{}'));
+          if (!parsed || !Array.isArray(parsed.transactions)) {
+            throw new Error('JSON inválido');
+          }
+          state.transactions = parsed.transactions;
+          saveState();
+          renderTransactions();
+          renderSummary();
+          updateStatus('Backup importado com sucesso');
+        } catch (error) {
+          updateStatus('Arquivo inválido. Use um backup exportado por este app.');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function copyBackup() {
+      const payload = JSON.stringify(state, null, 2);
+      navigator.clipboard.writeText(payload)
+        .then(() => updateStatus('Dados copiados para a área de transferência'))
+        .catch(() => updateStatus('Não foi possível copiar automaticamente. Use Exportar backup.'));
+    }
+
+    function attachEvents() {
+      document.getElementById('transaction-form').addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const form = event.currentTarget;
+        const description = document.getElementById('description').value.trim();
+        const category = document.getElementById('category').value.trim();
+        const type = document.getElementById('type').value;
+        const amount = Number(document.getElementById('amount').value);
+        const date = document.getElementById('date').value;
+
+        if (!description || !date || Number.isNaN(amount) || amount <= 0) {
+          updateStatus('Preencha descrição, data e valor válidos antes de salvar.');
+          return;
+        }
+
+        state.transactions.push({
+          id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
+          type,
+          description,
+          category: category || 'Geral',
+          amount,
+          date
+        });
+
+        saveState();
+        renderTransactions();
+        renderSummary();
+        form.reset();
+        document.getElementById('date').value = new Date().toISOString().slice(0, 10);
+      });
+
+      document.getElementById('download-backup').addEventListener('click', generateBackup);
+      document.getElementById('copy-backup').addEventListener('click', copyBackup);
+      document.getElementById('import-backup').addEventListener('change', (event) => {
+        const file = event.target.files && event.target.files[0];
+        importBackup(file);
+      });
+    }
+
+    function init() {
+      loadState();
+      document.getElementById('date').value = new Date().toISOString().slice(0, 10);
+      renderSummary();
+      renderTransactions();
+      attachEvents();
+      updateStatus('Dados salvos neste aparelho');
+    }
+
+    init();
+  </script>
 </body>
 </html>
